@@ -43,7 +43,7 @@ function Post({username, imageUrl, caption}) {
             <Card.Footer className='bg-white p-2'>
                 <InputGroup>
                     <FormControl
-                        style={{border:'none', outline:'none'}}
+                        style={{boxShadow:'none', outline:'none'}}
                         placeholder="Add a comment..."
                     />
                     <InputGroup.Append>

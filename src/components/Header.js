@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
-import { Container, Nav, Navbar, Button, Modal } from 'react-bootstrap'
+import { Container, Nav, Navbar, Button, Modal, Form } from 'react-bootstrap'
+import '../App.css'
+import SearchIcon from '../search.svg'
 
 function Header() {
-    const [show, setShow] = useState(false)  
-    
-    const handleShow = () => setShow(true)
-    const handleClose = () => setShow(false)
+    const [login, setLogin] = useState(false) 
+    const [register, setRegister] = useState(false)  
+    const [email, setEmail] = useState(null)
+    const [password, setPassword] = useState(null)
+    const [username, setUsername] = useState(null)
 
-
+    const handleRegister = (event) => {
+        event.preventDefault()
+        console.log(email, password, username)
+    }
     
     return (
         <Navbar bg='white' sticky='top' className='py-2 border-bottom'>
@@ -20,28 +26,24 @@ function Header() {
                 </Navbar.Brand>
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='mx-auto'>
-                        <input
+                        <Form.Control
                             type='text'
-                            placeholder='Search'
-                            className='px-4 text-center bg-light border'
-                            style={{outline:'none'}}
+                            placeholder={`Search...`}
+                            className='bg-light border'
+                            style={{outline:'none', boxShadow:'none'}}
                         />
                         
                     </Nav>
                     
                 </Navbar.Collapse>
-                <Button outline variant='light' onClick={handleShow}>
+                <Button className='mr-3' variant='outline-secondary' onClick={() => setLogin(true)}>
                     Login
                 </Button>
+                <Button variant='outline-secondary' onClick={() => setRegister(true)}>
+                    Register
+                </Button>
 
-                <Modal show={show} onHide={handleClose}>
-                    {/* <Button as={Modal.Header} className='text-center m-0 p-0' closeButton>
-                        <img
-                            className='text-center'
-                            src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png'
-                            alt='logo'
-                        />
-                    </Button> */}
+                <Modal show={login} onHide={() => setLogin(false)}>
                     <Modal.Header className='text-center' closeButton>
                         <Modal.Title className='w-100'>
                             <img
@@ -52,13 +54,74 @@ function Header() {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        Login form
+                        <Form.Control
+                            className='border-bottom mb-2'
+                            style={{boxShadow:'none', outline:'none'}}
+                            type='text'
+                            placeholder='Username'
+                            required
+                        />
+                        <Form.Control
+                            className='border-bottom mb-2'
+                            style={{boxShadow:'none', outline:'none'}}
+                            type='password'
+                            placeholder='Password'
+                            required
+                        />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="success" onClick={handleClose}>
-                            Save Changes
+                        <Button type='submit' variant="outline-success" >
+                            Login
                         </Button>
                     </Modal.Footer>
+                </Modal>
+
+                <Modal show={register} onHide={() => setRegister(false)}>
+                    <Modal.Header className='text-center' closeButton>
+                        <Modal.Title className='w-100'>
+                            <img
+                                className='ml-3'
+                                src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png'
+                                alt='logo'
+                            />
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Form>
+                        <Modal.Body>
+                            <Form.Control
+                                className='border-bottom mb-2'
+                                style={{boxShadow:'none', outline:'none'}}
+                                type='email'
+                                placeholder='Email'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                            <Form.Control
+                                className='border-bottom mb-2'
+                                style={{boxShadow:'none', outline:'none'}}
+                                type='text'
+                                placeholder='Username'
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                            <Form.Control
+                                className='border-bottom mb-2'
+                                style={{boxShadow:'none', outline:'none'}}
+                                type='password'
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder='Password'
+                                required
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onSubmit={(e) => handleRegister(e)} variant='outline-success'>
+                                Register
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
                 </Modal>
             </Container>
         </Navbar>
