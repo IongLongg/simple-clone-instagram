@@ -4,7 +4,7 @@ import { Col, Container, Row, Button, Modal, FormControl } from "react-bootstrap
 import "./App.css";
 import Header from "./components/Header";
 import Post from "./components/Post/Post";
-import SuggestFriends from "./components/SideBar/SuggestFriends";
+import SideBar from "./components/SideBar/SideBar";
 import UploadBar from './components/UploadBar'
 import { db, auth } from "./firebase";
 
@@ -68,14 +68,14 @@ function App() {
         {user ? (
           <Button variant='secondary' onClick={() => auth.signOut()}>Log out</Button>
         ) : (
-          <span className='float-right'>
+          <>
             <Button className='mr-3' variant='outline-secondary' onClick={() => setLoginModal(true)}>
               Login
             </Button>
-            <Button variant='outline-secondary' onClick={() => setRegisterModal(true)}>
+            <Button className='mr-3' variant='outline-secondary' onClick={() => setRegisterModal(true)}>
               Register
             </Button>
-          </span>
+          </>
         )}
       </Header>
 
@@ -186,8 +186,8 @@ function App() {
               />
             ))}
           </Col>
-          <Col md={4} className="bg-light">
-              <SuggestFriends/>
+          <Col md={4}>
+              <SideBar user={user}/>
           </Col>
         </Row>
       </Container>
