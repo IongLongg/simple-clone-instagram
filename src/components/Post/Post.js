@@ -1,20 +1,61 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import firebase from 'firebase'
 import { Card,  InputGroup,  Navbar, Button, FormControl, Image } from 'react-bootstrap'
+import { db } from '../../firebase'
 
-function Post({username, imageUrl, caption}) {
+function Post({currentUser, postId, username, imageUrl, caption}) {
+    const [comments, setComments] = useState([]) 
+    const [comment, setComment] = useState('')
+
+    const postComment = (event) => {
+        event.preventDefault()
+        if(!currentUser){
+            alert('Login to comment')
+            return
+        }
+
+        db.collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .add({
+                text : comment,
+                username : currentUser.displayName,
+                timestamp : firebase.firestore.FieldValue.serverTimestamp()
+            })
+        setComment('')
+        
+    }
+
+    useEffect(() => {
+        let unsubscribe 
+        postId && (
+            unsubscribe = db.collection('posts')
+                            .doc(postId)
+                            .collection('comments')
+                            .orderBy('timestamp', 'desc')
+                            .onSnapshot((snapshot) => {
+                                setComments(snapshot.docs.map(doc => doc.data()))
+                            })
+        )
+
+        return () => {
+            unsubscribe()
+        }
+    }, [postId])
+
     return (
-        <Card className='border-solid-light' style={{marginBottom:'50px'}}>
+        <Card className='border-solid-light my-5'>
             <Navbar  variant="dark">
                 <Navbar.Brand href="#" >
                     <Image
                         className='mr-3'
                         alt="avatar"
-                        src={imageUrl}
+                        src='./logo512.png'
                         width="42"
                         height="42"
                         roundedCircle 
                     />
-                    <a href='#' style={{color:'black'}}><b>{username}</b></a>             
+                    <a href={`#${username}`} style={{color:'black'}}><b>{username}</b></a>             
                 </Navbar.Brand>
             </Navbar>
             <Card.Img style={{borderRadius:'0'}} src={imageUrl}/>
@@ -27,27 +68,36 @@ function Post({username, imageUrl, caption}) {
                 <Card.Text>
                     <b>8,047 likes</b>
                 </Card.Text>
-                <Card.Text>
-                    <strong>{username}</strong> {caption}
+                <Card.Text className='px-0'>
+                    <b>{username}</b> {caption}
                 </Card.Text>
-                <Card.Text>
-                    <b>Friend 1</b> comment 1
-                </Card.Text>
-                <Card.Text>
-                    <b>Friend 1</b> comment 1
-                </Card.Text>
-                <Card.Text>
-                    <b>Friend 1</b> comment 1
-                </Card.Text>
+                {
+                    comments.map(cmt => (
+                        <Card.Text>
+                            <b>{cmt.username}</b> {cmt.text}
+                        </Card.Text>
+                    ))
+                }
             </Card.Body>
             <Card.Footer className='bg-white p-2'>
                 <InputGroup>
                     <FormControl
+                        type='text'
                         style={{boxShadow:'none', outline:'none'}}
                         placeholder="Add a comment..."
+                        onChange={(e) => setComment(e.target.value)}
+                        value={comment}
                     />
                     <InputGroup.Append>
-                        <Button style={{textDecoration:'none'}} variant='link'>Post</Button>
+                        <Button 
+                            type='submit'
+                            disabled={!comment} 
+                            style={{textDecoration:'none'}} 
+                            variant='link'
+                            onClick={postComment}
+                        >
+                            Post
+                        </Button>
                     </InputGroup.Append>
                 </InputGroup>
             </Card.Footer>
