@@ -1,8 +1,12 @@
-import React from 'react'
-import { Container, Nav, Navbar, Form} from 'react-bootstrap'
+import React, { useContext } from 'react'
+import { Container, Nav, Navbar, Form, Button} from 'react-bootstrap'
+import SignInForm from './ModalForm/SignInForm'
+import SignUpForm from './ModalForm/SignUpForm'
+import { AuthContext } from '../contexts/AuthContext'
 
+const NavbarHeader = () => {
+    const auth = useContext(AuthContext);
 
-function Header({children}) {
     return (
         <Navbar bg='white' sticky='top' className='py-2 border-bottom'>
             <Container>
@@ -22,10 +26,17 @@ function Header({children}) {
                         />
                     </Nav>
                 </Navbar.Collapse>
-                {children}
+                {auth.user ? (
+                    <Button variant='secondary' onClick={() => auth.signout()}>Log out</Button>
+                ) : (
+                    <div>
+                        <SignInForm/>
+                        <SignUpForm/>
+                    </div>
+                )}
             </Container>
         </Navbar>
     )
 }
 
-export default Header
+export default NavbarHeader

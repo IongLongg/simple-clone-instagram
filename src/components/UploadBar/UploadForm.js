@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import firebase from 'firebase'
 import { Button, FormControl, ProgressBar } from 'react-bootstrap'
-import { db, storage } from '../firebase'
+import { db, storage } from '../../firebase'
 
-function UploadBar({username}) {
+function UploadForm({username}) {
     const [caption, setCaption] = useState('')
     const [file, setFile] = useState(null)
     const [progress, setProgress] = useState(0)
@@ -84,4 +84,4 @@ function UploadBar({username}) {
     )
 }
 
-export default UploadBar
+export default UploadForm
