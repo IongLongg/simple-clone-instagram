@@ -23,7 +23,7 @@ const NewsFeed = () => {
             {posts.map(post => (
                 <Post
                     key={post.id}
-                    currentUser={auth.user.displayName}
+                    currentUser={auth.user?.displayName}
                     postId={post.id}
                     username={post.username}
                     imageUrl={post.imageUrl}
