@@ -3,13 +3,13 @@ import firebase from 'firebase'
 import { Card,  InputGroup,  Navbar, Button, FormControl, Image } from 'react-bootstrap'
 import { db } from '../../firebase'
 
-function Post({currentUser, postId, username, imageUrl, caption}) {
+function Post({currentUsername, postId, username, imageUrl, caption}) {
     const [comments, setComments] = useState([]) 
     const [comment, setComment] = useState('')
 
     const postComment = (event) => {
         event.preventDefault()
-        if(!currentUser){
+        if(!currentUsername){
             alert('Login to comment')
             return
         }
@@ -19,7 +19,7 @@ function Post({currentUser, postId, username, imageUrl, caption}) {
             .collection('comments')
             .add({
                 text : comment,
-                username : currentUser.displayName,
+                username : currentUsername,
                 timestamp : firebase.firestore.FieldValue.serverTimestamp()
             })
         setComment('')
